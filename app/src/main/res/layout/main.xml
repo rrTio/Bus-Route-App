@@ -1,20 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/baseGrey"
+>
+
+    <SurfaceView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_Main"
+            app:layout_constraintHeight_percent="0.62"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="50dp"
+            android:id="@+id/sv_View"/>
 
     <TextView
-            android:id="@+id/text_view_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
+            android:id="@+id/lbl_Main"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/app_name"
-            android:textColor="@color/feugreen"
-            android:textSize="45dp"
+            android:textColor="@color/feugold"
+            android:background="@color/feugreen"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintHeight_percent="0.08"
+            app:layout_constraintWidth_percent="1"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"/>
 
-            tools:ignore="MissingConstraints"
+    <TextView
+            android:id="@+id/txt_barcodeValue"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/scanValueDefault"
+            android:textColor="@color/feugreen"
+            android:autoSizeTextType="uniform"
+
+            app:layout_constraintHeight_percent="0.04"
+            app:layout_constraintTop_toBottomOf="@id/sv_View"
+            app:layout_constraintWidth_percent="1"
+            android:layout_marginTop="25dp"
+            tools:ignore="MissingConstraints"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnScan"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textColor="@color/feugold"
+            android:text="@string/btn_ScanText"
+            android:background="@drawable/btn_scan"
+
+            android:autoSizeTextType="uniform"
+            app:layout_constraintHeight_percent="0.06"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_barcodeValue"
     />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

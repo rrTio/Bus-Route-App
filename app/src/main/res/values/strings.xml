@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Bus Route App</string>
+    <string name="btn_ScanText">Scan QR Code</string>
+    <string name="scanValueDefault">Press Button To Scan</string>
 </resources>

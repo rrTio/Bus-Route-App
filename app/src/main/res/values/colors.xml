@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="feugreen">#0A4620</color>
     <color name="feugold">#FDBE12</color>
+    <color name="baseGrey">#e0e0e0</color>
 </resources>
