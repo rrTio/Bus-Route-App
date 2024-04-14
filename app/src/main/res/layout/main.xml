@@ -32,35 +32,35 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints"/>
 
-    <TextView
-            android:id="@+id/txt_barcodeValue"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:text="@string/scanValueDefault"
-            android:textColor="@color/feugreen"
-            android:autoSizeTextType="uniform"
+        <TextView
+                android:id="@+id/txt_barcodeValue"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="SCAN QR CODE"
+                android:textColor="@color/feugreen"
+                android:autoSizeTextType="uniform"
 
-            app:layout_constraintHeight_percent="0.04"
-            app:layout_constraintTop_toBottomOf="@id/sv_View"
-            app:layout_constraintWidth_percent="1"
-            android:layout_marginTop="25dp"
-            tools:ignore="MissingConstraints"/>
+                app:layout_constraintHeight_percent="0.04"
+                app:layout_constraintTop_toBottomOf="@id/sv_View"
+                app:layout_constraintWidth_percent="1"
+                android:layout_marginTop="25dp"
+                tools:ignore="MissingConstraints"/>
+    <!--
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnScan"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:textColor="@color/feugold"
+                    android:text="@string/btn_ScanText"
+                    android:background="@drawable/btn_scan"
 
-    <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnScan"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:textColor="@color/feugold"
-            android:text="@string/btn_ScanText"
-            android:background="@drawable/btn_scan"
-
-            android:autoSizeTextType="uniform"
-            app:layout_constraintHeight_percent="0.06"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_barcodeValue"
-    />
-
+                    android:autoSizeTextType="uniform"
+                    app:layout_constraintHeight_percent="0.06"
+                    app:layout_constraintWidth_percent="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_barcodeValue"
+            />
+        -->
 </androidx.constraintlayout.widget.ConstraintLayout>
