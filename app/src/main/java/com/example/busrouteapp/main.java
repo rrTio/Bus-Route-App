@@ -50,8 +50,8 @@ import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-public class main extends AppCompatActivity
-{
+
+public class main extends AppCompatActivity {
     Button btnScan;
     SurfaceView surfaceView;
     TextView txtBarcodeValue, alertDetails;
@@ -64,8 +64,8 @@ public class main extends AppCompatActivity
     private static final String SALTVALUE = "abcdefg";
     DBHandler handler;
 
-    @Override protected void onCreate(Bundle savedInstanceState)
-    {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -84,12 +84,12 @@ public class main extends AppCompatActivity
         });*/
     }
 
-    private void initViews(){
+    private void initViews() {
         txtBarcodeValue = findViewById(R.id.txt_barcodeValue);
         surfaceView = findViewById(R.id.sv_View);
     }
 
-    private void initializeDetectorsAndSources(){
+    private void initializeDetectorsAndSources() {
         Toast.makeText(getApplicationContext(), "Camera is on", Toast.LENGTH_SHORT).show();
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
         cameraSource = new CameraSource.Builder(this, barcodeDetector).setRequestedPreviewSize(1920, 1080).setAutoFocusEnabled(true).build();
@@ -97,16 +97,14 @@ public class main extends AppCompatActivity
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(@NonNull SurfaceHolder holder) {
-                try{
-                    if(ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+                try {
+                    if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
-                    }
-                    else{
+                    } else {
                         ActivityCompat.requestPermissions(main.this,
                                 new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                     }
-                }
-                catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -132,31 +130,28 @@ public class main extends AppCompatActivity
             @Override
             public void receiveDetections(@NonNull @NotNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(barcodes.size() != 0){
+                if (barcodes.size() != 0) {
                     txtBarcodeValue.post(new Runnable() {
                         @Override
                         public void run() {
 
-                            try{
+                            try {
                                 intentData = barcodes.valueAt(0).displayValue;
 
-                                // decryption and insert to database
+                                // Decryption
                                 String decryptedValue = decrypt(intentData);
-                                String[] decryptedArray = decryptedValue.split(",");
+
+                                // Decrypted Data to Array
+                                //String[] decryptedArray = decryptedValue.split(",");
+
+                                //Add to Database array elements
                                 //handler.addTransaction(decryptedArray[0],decryptedArray[1],decryptedArray[2],decryptedArray[3],decryptedArray[4],decryptedArray[5],decryptedArray[6],decryptedArray[7],decryptedArray[8],decryptedArray[9],decryptedArray[10],decryptedArray[11],decryptedArray[12]);
 
                                 //Log for Debugging
-                                Log.e("d","Intent Data: " + intentData);
+                                Log.e("d", "Intent Data: " + intentData);
 
-                                /*
-                                Intent resultIntent = new Intent();
-                                resultIntent.putExtra("intentData", intentData);
-                                setResult(AppCompatActivity.RESULT_OK, resultIntent);
-                                finish();
-                                */
-                                
-                                showDetails(intentData);
-                            }catch (Exception e){
+                                showDetails(intentData, decryptedValue);
+                            } catch (Exception e) {
                                 showError(intentData);
                             }
                         }
@@ -166,20 +161,31 @@ public class main extends AppCompatActivity
         });
     }
 
-    public void showDetails(String alertIntentData){
+    public void showDetails(String alertIntentData, String decryptedData) {
         cameraSource.release();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.scanned_info_alert);
 
         builder.setPositiveButton("ACCEPT", (dialog, which) ->
-            {
-                dialog.dismiss();
-                dialog.cancel();
-                initViews();
-                initializeDetectorsAndSources();
-                Toast.makeText(this, "PRESSED ACCEPT", Toast.LENGTH_SHORT).show();
-                //ADD ACTION TO ADD TO DATABASE
-            }
+                {
+                    dialog.dismiss();
+                    dialog.cancel();
+                    initViews();
+                    initializeDetectorsAndSources();
+                    //ADD ACTION TO ADD TO DATABASE
+                    try {
+                        if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                            cameraSource.start(surfaceView.getHolder());
+                            Toast.makeText(this, "CAMERA SOURCE START", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ActivityCompat.requestPermissions(main.this,
+                                    new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                            cameraSource.start(surfaceView.getHolder());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
         );
 
         builder.setNegativeButton("DECLINE", (dialog, which) ->
@@ -188,16 +194,28 @@ public class main extends AppCompatActivity
                 dialog.cancel();
                 initViews();
                 initializeDetectorsAndSources();
-                Toast.makeText(this, "PRESSED DECLINE", Toast.LENGTH_SHORT).show();
                 //ADD ACTION TO ADD TO DATABASE IF NECESSARY
+                try {
+                    if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        cameraSource.start(surfaceView.getHolder());
+                        Toast.makeText(this, "CAMERA SOURCE START", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ActivityCompat.requestPermissions(main.this,
+                                new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                        cameraSource.start(surfaceView.getHolder());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         );
 
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         alertDetails = dialog.findViewById(R.id.lbl_details);
-        alertDetails.setText(alertIntentData);
+        alertDetails.setText("Encrypted Data: " + alertIntentData + "\n" + "Decrypted Data: " + decryptedData);
 
         Button btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         LinearLayout.LayoutParams layoutParamsPositive = (LinearLayout.LayoutParams) btnPositive.getLayoutParams();
@@ -220,7 +238,7 @@ public class main extends AppCompatActivity
     public void showError(String error){
         cameraSource.release();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(R.layout.scanned_info_alert);
+        builder.setView(R.layout.invalid_scanned_info);
 
         builder.setPositiveButton("OK", (dialog, which) ->
                 {
@@ -230,6 +248,18 @@ public class main extends AppCompatActivity
                     initializeDetectorsAndSources();
                     Toast.makeText(this, "PRESSED ACCEPT", Toast.LENGTH_SHORT).show();
                     //ADD ACTION TO ADD TO DATABASE IF NECESSARY
+                    try {
+                        if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                            cameraSource.start(surfaceView.getHolder());
+                            Toast.makeText(this, "CAMERA SOURCE START", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ActivityCompat.requestPermissions(main.this,
+                                    new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                            cameraSource.start(surfaceView.getHolder());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
         );
 
