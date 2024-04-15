@@ -27,7 +27,7 @@ public class intro extends AppCompatActivity{
         {
             @Override public void run()
             {
-                Intent intent = new Intent(intro.this, main.class);
+                Intent intent = new Intent(intro.this,  menu.class);
                 startActivity(intent);
             }
         }, INTRO_TIMEOUT);
