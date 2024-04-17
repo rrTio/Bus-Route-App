@@ -2,4 +2,8 @@
     <string name="app_name">Bus Route App</string>
     <string name="btn_ScanText">Scan QR Code</string>
     <string name="scanValueDefault">Press Button To Scan</string>
+    <string name="btnScan">Scanner</string>
+    <string name="btnDB">Scanned Data</string>
+    <string name="btnLogs">Logs</string>
+    <string name="btnRoutes">Routes</string>
 </resources>

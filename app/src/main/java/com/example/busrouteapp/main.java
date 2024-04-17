@@ -8,20 +8,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
+import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
-import android.content.Intent;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -31,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import com.example.busrouteapp.database.DBHandler;
 import org.jetbrains.annotations.Nullable;
 
-import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -42,7 +36,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
-import java.util.*;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -50,6 +43,9 @@ import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class main extends AppCompatActivity {
     Button btnScan;
@@ -63,6 +59,12 @@ public class main extends AppCompatActivity {
     private static final String SECRET_KEY = "123456789";
     private static final String SALTVALUE = "abcdefg";
     DBHandler handler;
+    int textSize = 20;
+    int paramsWeight = 10;
+
+    String currentDate, currentTime;
+    String testusrReader = "TEST USER";
+    String testusrOwner = "TEST OWNER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,16 +143,14 @@ public class main extends AppCompatActivity {
                                 // Decryption
                                 String decryptedValue = decrypt(intentData);
 
-                                // Decrypted Data to Array
-                                //String[] decryptedArray = decryptedValue.split(",");
-
-                                //Add to Database array elements
-                                //handler.addTransaction(decryptedArray[0],decryptedArray[1],decryptedArray[2],decryptedArray[3],decryptedArray[4],decryptedArray[5],decryptedArray[6],decryptedArray[7],decryptedArray[8],decryptedArray[9],decryptedArray[10],decryptedArray[11],decryptedArray[12]);
-
                                 //Log for Debugging
                                 Log.e("d", "Intent Data: " + intentData);
-
-                                showDetails(intentData, decryptedValue);
+                                if(decryptedValue != null){
+                                    showDetails(intentData, decryptedValue);
+                                }
+                                else{
+                                    showError(intentData);
+                                }
                             } catch (Exception e) {
                                 showError(intentData);
                             }
@@ -173,6 +173,12 @@ public class main extends AppCompatActivity {
                     initViews();
                     initializeDetectorsAndSources();
                     //ADD ACTION TO ADD TO DATABASE
+                    // Decrypted Data to Array
+                    String[] decryptedArray = decryptedData.split(",");
+
+                    //Add to Database array elements
+                    dbAddLogs(alertIntentData, "BTN POSITIVE", "ACCEPTED", testusrOwner, testusrReader);
+
                     try {
                         if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                             cameraSource.start(surfaceView.getHolder());
@@ -195,6 +201,7 @@ public class main extends AppCompatActivity {
                 initViews();
                 initializeDetectorsAndSources();
                 //ADD ACTION TO ADD TO DATABASE IF NECESSARY
+                dbAddLogs(alertIntentData, "BTN NEGATIVE", "DECLINED", testusrOwner, testusrReader);
                 try {
                     if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
@@ -221,17 +228,17 @@ public class main extends AppCompatActivity {
         LinearLayout.LayoutParams layoutParamsPositive = (LinearLayout.LayoutParams) btnPositive.getLayoutParams();
         btnPositive.setBackground(getDrawable(R.drawable.default_btn_positive));
         btnPositive.setTextColor(Color.parseColor("#FDBE12"));
-        btnPositive.setTextSize(35);
-        layoutParamsPositive.weight = 10;
+        btnPositive.setTextSize(textSize);
+        layoutParamsPositive.weight = paramsWeight;
         btnPositive.setLayoutParams(layoutParamsPositive);
 
         Button btnNegative = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
         LinearLayout.LayoutParams layoutParamsNegative = (LinearLayout.LayoutParams) btnNegative.getLayoutParams();
         btnNegative.setBackground(getDrawable(R.drawable.default_btn_negative));
         btnNegative.setTextColor(Color.parseColor("#FDBE12"));
-        btnNegative.setTextSize(35);
-        layoutParamsNegative.weight = 10;
-        btnPositive.setLayoutParams(layoutParamsNegative);
+        btnNegative.setTextSize(textSize);
+        layoutParamsNegative.weight = paramsWeight;
+        btnNegative.setLayoutParams(layoutParamsNegative);
     }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
@@ -248,6 +255,7 @@ public class main extends AppCompatActivity {
                     initializeDetectorsAndSources();
                     Toast.makeText(this, "PRESSED ACCEPT", Toast.LENGTH_SHORT).show();
                     //ADD ACTION TO ADD TO DATABASE IF NECESSARY
+                    dbAddLogs(error, "BTN ERROR", "ERROR", testusrOwner, testusrReader);
                     try {
                         if (ActivityCompat.checkSelfPermission(main.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                             cameraSource.start(surfaceView.getHolder());
@@ -271,17 +279,30 @@ public class main extends AppCompatActivity {
 
         Button btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         LinearLayout.LayoutParams layoutParamsPositive = (LinearLayout.LayoutParams) btnPositive.getLayoutParams();
-        btnPositive.setBackground(getDrawable(R.drawable.default_btn_positive));
-        btnPositive.setTextColor(Color.parseColor("#FDBE12"));
-        btnPositive.setTextSize(35);
-        layoutParamsPositive.weight = 10;
+        btnPositive.setBackground(getDrawable(R.drawable.default_btn_negative));
+        btnPositive.setTextColor(Color.parseColor("#FFFFFF"));
+        btnPositive.setTextSize(textSize);
+        layoutParamsPositive.weight = paramsWeight;
+        layoutParamsPositive.gravity = Gravity.CENTER_HORIZONTAL;
         btnPositive.setLayoutParams(layoutParamsPositive);
     }
 
-     void dbAddTransaction(String[] decryptedArray){
-        handler.addTransaction(decryptedArray[0],decryptedArray[1],decryptedArray[2],decryptedArray[3],decryptedArray[4],decryptedArray[5],decryptedArray[6],decryptedArray[7],decryptedArray[8],decryptedArray[9],decryptedArray[10],decryptedArray[11],decryptedArray[12]);
-        Toast.makeText(getApplicationContext(), intentData, Toast.LENGTH_SHORT).show();
+    public void dbAddTransaction(String transID, String transDate, String transTime, String route, String client, String startingLocation, String endingLocation, String travelSchedDate, String travelSchedTime, String bookingStatus, String boardingStatus, String seatReserved, String reservationBalance){
+        handler.addTransaction(transID ,transDate,transTime,route,client,startingLocation,endingLocation,travelSchedDate,travelSchedTime,bookingStatus,boardingStatus,seatReserved,reservationBalance);
+        Toast.makeText(getApplicationContext(), "Inserted TransID: " + transID, Toast.LENGTH_SHORT).show();
     }
+
+    public void dbAddLogs(String logValue, String logAction, String logStatus, String logOwner, String logReader){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            currentTime = time.format(now);
+            currentDate = date.format(now);
+        }
+        handler.addLogs(currentDate, currentTime, logValue, logAction, logStatus, logOwner, logReader);
+    }
+
 
     @Nullable
     public static String decrypt(String strToDecrypt)

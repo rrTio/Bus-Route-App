@@ -33,6 +33,7 @@ public class DBHandler extends SQLiteOpenHelper
     public static final String LOG_ACTION = "col_action";
     public static final String LOG_STATUS = "col_status";
     public static final String LOG_READER = "col_reader";
+    public static final String LOG_VALUE = "col_value";
     public static final String LOG_QR_OWNER = "col_qrOwner";
 
     public static final String TB_NAME_ROUTES = "tb_Routes";
@@ -52,12 +53,23 @@ public class DBHandler extends SQLiteOpenHelper
 
     @Override public void onCreate(SQLiteDatabase db)
     {
-        String busRouteTransactions = "CREATE TABLE IF NOT EXISTS " + TB_NAME_BRT;
-        String logs = "CREATE TABLE IF NOT EXISTS " + TB_NAME_BRT;
-        String routes = "CREATE TABLE IF NOT EXISTS " + TB_NAME_ROUTES;
-        db.execSQL(busRouteTransactions);
+        //String busRouteTransactions = "CREATE TABLE IF NOT EXISTS " + TB_NAME_BRT;
+        //db.execSQL(busRouteTransactions);
+
+        //String routes = "CREATE TABLE IF NOT EXISTS " + TB_NAME_ROUTES;
+        //db.execSQL(routes);
+
+        String logs = "CREATE TABLE IF NOT EXISTS "
+                + TB_NAME_LOG + " ( "
+                + LOG_DATE + " CHAR,"
+                + LOG_TIME + " CHAR,"
+                + LOG_VALUE + " CHAR,"
+                + LOG_ACTION + " CHAR,"
+                + LOG_STATUS + " CHAR,"
+                + LOG_QR_OWNER + " CHAR,"
+                + LOG_READER + " CHAR);";
         db.execSQL(logs);
-        db.execSQL(routes);
+
     }
 
     /////////////// ADD TO DATABASE ///////////////
@@ -68,6 +80,21 @@ public class DBHandler extends SQLiteOpenHelper
         //values.put();
 
         long data = database.insert(TB_NAME_BRT, null, values);
+        if (data > 0) {return true;} else {return false;}
+    }
+
+    public boolean addLogs(String logDate, String logTime, String logValue, String logAction, String logStatus, String logOwner, String logReader)
+    {
+        SQLiteDatabase dbLogs = this.getWritableDatabase();
+        ContentValues logValues = new ContentValues();
+        logValues.put(LOG_DATE, logDate);
+        logValues.put(LOG_TIME, logTime);
+        logValues.put(LOG_VALUE, logValue);
+        logValues.put(LOG_ACTION, logAction);
+        logValues.put(LOG_STATUS, logStatus);
+        logValues.put(LOG_QR_OWNER, logOwner);
+        logValues.put(LOG_READER, logReader);
+        long data = dbLogs.insert(TB_NAME_LOG, null, logValues);
         if (data > 0) {return true;} else {return false;}
     }
 

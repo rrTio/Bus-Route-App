@@ -21,4 +21,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
     />
+
+    <Button tools:ignore="MissingConstraints"
+            android:id="@+id/btnScanQR"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:text="@string/btnScan"
+            android:textColor="@color/feugold"
+            android:background="@drawable/bg_btn"
+            android:textSize="20dp"
+
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintHeight_percent="0.08"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_MainMenu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="150dp"
+    />
+
+    <Button tools:ignore="MissingConstraints"
+            android:id="@+id/btnShowLogs"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:text="@string/btnLogs"
+            android:textColor="@color/feugold"
+            android:background="@drawable/bg_btn"
+            android:textSize="20dp"
+
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintHeight_percent="0.08"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnScanQR"
+            android:layout_marginTop="20dp"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
