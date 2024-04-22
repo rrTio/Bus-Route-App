@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/baseGrey">
+
+    <TextView tools:ignore="MissingConstraints"
+              android:id="@+id/lbl_logs_header"
+              android:layout_width="0dp"
+              android:layout_height="0dp"
+              android:text="@string/lblLogs"
+              android:gravity="center"
+              android:autoSizeTextType="uniform"
+              android:textColor="@color/feugreen"
+              app:layout_constraintHeight_percent="0.1"
+              app:layout_constraintWidth_percent="0.8"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <ListView tools:ignore="MissingConstraints"
+              android:id="@+id/listLogItems"
+              android:layout_width="0dp"
+              android:layout_height="0dp"
+              android:divider="@color/feugreen"
+              android:dividerHeight="2dp"
+              android:footerDividersEnabled="true"
+              app:layout_constraintWidth_percent="1"
+              app:layout_constraintHeight_percent="0.9"
+              app:layout_constraintTop_toBottomOf="@+id/lbl_logs_header"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

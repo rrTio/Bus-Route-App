@@ -37,6 +37,11 @@
                 android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
 
+        <activity
+                android:name=".logs"
+                android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>

@@ -1,4 +1,5 @@
 package com.example.busrouteapp;
+import com.example.busrouteapp.encryption;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -24,28 +25,12 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import org.jetbrains.annotations.NotNull;
 import com.example.busrouteapp.database.DBHandler;
-import org.jetbrains.annotations.Nullable;
 
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import java.util.Base64;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static android.R.*;
 
 public class main extends AppCompatActivity {
     Button btnScan;
@@ -56,8 +41,7 @@ public class main extends AppCompatActivity {
     private CameraSource cameraSource;
     private static final int REQUEST_CAMERA_PERMISSION = 201;
     String intentData = "";
-    private static final String SECRET_KEY = "123456789";
-    private static final String SALTVALUE = "abcdefg";
+
     DBHandler handler;
     int textSize = 20;
     int paramsWeight = 10;
@@ -74,16 +58,6 @@ public class main extends AppCompatActivity {
         initViews();
         initializeDetectorsAndSources();
         handler = new DBHandler(this);
-        /*
-        btnScan = findViewById(R.id.btnScan);
-        btnScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initViews();
-                initializeDetectorsAndSources();
-                Log.e("d", "Button Pressed");
-            }
-        });*/
     }
 
     private void initViews() {
@@ -141,7 +115,7 @@ public class main extends AppCompatActivity {
                                 intentData = barcodes.valueAt(0).displayValue;
 
                                 // Decryption
-                                String decryptedValue = decrypt(intentData);
+                                String decryptedValue = encryption.decrypt(intentData);
 
                                 //Log for Debugging
                                 Log.e("d", "Intent Data: " + intentData);
@@ -302,44 +276,4 @@ public class main extends AppCompatActivity {
         }
         handler.addLogs(currentDate, currentTime, logValue, logAction, logStatus, logOwner, logReader);
     }
-
-
-    @Nullable
-    public static String decrypt(String strToDecrypt)
-    {
-        try
-        {
-            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            KeySpec spec = new PBEKeySpec(SECRET_KEY.toCharArray(), SALTVALUE.getBytes(), 65536, 256);
-            SecretKey tmp = factory.generateSecret(spec);
-            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
-            }
-        }
-        catch (InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException |
-               InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e)
-        {
-            System.out.println("Error occured during decryption: " + e.toString());
-        }
-        return null;
-    }
-
-    /*
-    @Override
-    protected void onPause(){
-        super.onPause();
-        cameraSource.release();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        initializeDetectorsAndSources();
-    }
-    */
 }

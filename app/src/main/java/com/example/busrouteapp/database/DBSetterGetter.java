@@ -1,12 +1,14 @@
 package com.example.busrouteapp.database;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
+
 public class DBSetterGetter
 {
     private String transID, transDate, transTime, route, client, startingLocation, endingLocation, travelSchedDate, travelSchedTime, bookingStatus, boardingStatus, seatReserved, reservationBalance;
 
-
-    public DBSetterGetter(String transID, String transDate, String transTime, String route, String client, String startingLocation, String endingLocation, String travelSchedDate, String travelSchedTime, String bookingStatus, String boardingStatus, String seatReserved, String reservationBalance)
+    public DBSetterGetter( String transID, String transDate, String transTime, String route, String client, String startingLocation, String endingLocation, String travelSchedDate, String travelSchedTime, String bookingStatus, String boardingStatus, String seatReserved, String reservationBalance)
     {
         this.transID = transID;
         this.transDate = transDate;
@@ -21,8 +23,11 @@ public class DBSetterGetter
         this.boardingStatus = boardingStatus;
         this.seatReserved = seatReserved;
         this.reservationBalance = reservationBalance;
+
+
     }
 
+    @NotNull
     @Override public String toString()
     {
         return Arrays.asList(transID, transDate, transTime, route, client, startingLocation, endingLocation, travelSchedDate, travelSchedTime, bookingStatus, boardingStatus, seatReserved, reservationBalance).toString();
@@ -69,6 +74,8 @@ public class DBSetterGetter
         return reservationBalance;
     }
 
+
+
     //SETTER
     public void setTransID(String transID) {
         this.transID = transID;
@@ -109,4 +116,6 @@ public class DBSetterGetter
     public void setReservationBalance(String reservationBalance){
         this.reservationBalance = reservationBalance;
     }
+
+
 }

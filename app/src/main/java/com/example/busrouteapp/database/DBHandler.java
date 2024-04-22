@@ -133,6 +133,34 @@ public class DBHandler extends SQLiteOpenHelper
         return returnData;
     }
 
+    public List<logSetterGetter> getLogs()
+    {
+        List<logSetterGetter> returnData = new ArrayList<>();
+        String getLogData = "SELECT * FROM " + TB_NAME_LOG + " ORDER BY " + LOG_DATE + " ASC";
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery(getLogData, null);
+
+        if(cursor.moveToFirst())
+        {
+            do {
+                String logDate = cursor.getString(0);
+                String logTime = cursor.getString(1);
+                String logValue = cursor.getString(2);
+                String logAction = cursor.getString(3);
+                String logStatus = cursor.getString(4);
+                String logOwner = cursor.getString(5);
+                String logReader = cursor.getString(6);
+
+                logSetterGetter input = new logSetterGetter(logDate, logTime, logValue, logAction, logStatus, logOwner, logReader);
+                returnData.add(input);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return returnData;
+    }
+
     /////////////// DELETE A USER FROM DATABASE ///////////////
     /*
     public boolean deleteUserData(DBSetterGetter dbSetterGetter)

@@ -6,4 +6,5 @@
     <string name="btnDB">Scanned Data</string>
     <string name="btnLogs">Logs</string>
     <string name="btnRoutes">Routes</string>
+    <string name="lblLogs">User Logs</string>
 </resources>

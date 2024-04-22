@@ -19,9 +19,24 @@ public class menu extends AppCompatActivity {
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(menu.this, main.class);
-                startActivity(intent);
+               openScanner();
             }
         });
+
+        btnLogs = findViewById(R.id.btnShowLogs);
+        btnLogs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLogs();
+            }
+        });
+    }
+
+    public void openScanner(){
+        startActivity(new Intent(menu.this, main.class));
+    }
+
+    public void openLogs(){
+        startActivity(new Intent(menu.this, logs.class));
     }
 }
