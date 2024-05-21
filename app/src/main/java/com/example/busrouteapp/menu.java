@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import com.microsoft.aad.*;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class menu extends AppCompatActivity {
 

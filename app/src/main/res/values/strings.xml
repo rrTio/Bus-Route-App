@@ -7,4 +7,6 @@
     <string name="btnLogs">Logs</string>
     <string name="btnRoutes">Routes</string>
     <string name="lblLogs">User Logs</string>
+    <string name="clientID">66d8c610-5a3e-4dd1-9a8a-562defe7fb9d</string>
+    <string name="tenantID">80a45edc-d5ee-46e0-9d75-37c47be9b7cc</string>
 </resources>
